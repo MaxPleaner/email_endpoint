@@ -6,7 +6,7 @@ require 'socket' # from Ruby Std-lib, provides TCPServer
 def with_running_server(&blk)
   port = find_open_port
   thread = Thread.new { `rackup -p #{port} &> /dev/null` }
-  sleep 0.5 # TODO: remove this
+  sleep 1 # TODO: remove this
   blk.call("http://localhost:#{port}")
   thread.kill
 end
