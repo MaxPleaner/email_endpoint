@@ -5,3 +5,7 @@ gem "sinatra"
 gem "rack"
 
 gem 'rspec'
+
+gem 'activesupport'
+
+gem 'json'
