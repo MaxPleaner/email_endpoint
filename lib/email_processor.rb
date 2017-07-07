@@ -19,29 +19,50 @@ class EmailProcessor
 
   # Per-column validation procs each return an array of error strings
   ParamValidations = {
-    to: -> (val) do
-      []
-    end,
-    to_name: -> (val) do
-      []
-    end,
-    from: -> (val) do
-      []
-    end,
-    from_name: -> (val) do
-      []
-    end,
-    subject: -> (val) do
-      []
-    end,
-    body: -> (val) do
-      []
-    end,
+    to: -> (val) {
+      [
+        ("invalid email address" if valid_email?(val)),
+        ("no value given" if val.blank?)
+      ].compact
+    },
+    to_name: -> (val) {
+      [
+        ("no value given" if val.blank?)
+      ].compact
+    },
+    from: -> (val) {
+      [
+        ("invalid email address" if valid_email?(val)),
+        ("no value given" if val.blank?)
+      ].compact
+    },
+    from_name: -> (val) {
+      [
+        ("no value given" if val.blank?)
+      ].compact
+    },
+    subject: -> (val) {
+      [
+        ("no value given" if val.blank?)
+      ].compact
+    },
+    body: -> (val) {
+      [
+        ("no value given" if val.blank?)
+      ].compact
+    },
   }
 
   class << self
 
     private
+
+    # @param email [String]
+    # @return [Boolean] indicating whether it passes the email regex
+    #   the regex is taken from https://stackoverflow.com/a/22994329/2981429
+    def valid_email?(email)
+      !!(email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
+    end
 
     # @param params [Hash]
     # @return [Hash], a filtered subset of params
