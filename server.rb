@@ -1,6 +1,10 @@
 require 'sinatra/base'
 require 'active_support/all'
 require 'json'
+require 'dotenv'
+
+# Load environment variables from .env file
+Dotenv.load 
 
 require_relative './lib/email_processor.rb'
 

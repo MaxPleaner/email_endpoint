@@ -9,3 +9,5 @@ gem 'rspec'
 gem 'activesupport'
 
 gem 'json'
+
+gem 'dotenv'
