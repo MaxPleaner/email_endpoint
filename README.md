@@ -14,12 +14,24 @@ and has the `curl` program installed.
 
 #### Usage
 
+**step 1**
+
 ```sh
 git clone http://github.com/maxpleaner/brightwheel_challenge
 cd brightwheel_challenge
 bundle install
+cp .env.example .env
+```
+
+**step 2**
+
+_get api keys from mailgun and sendgrid, then add them to .env_
+
+**step 3**
+
+```sh
 bundle exec rackup
 ```
 
-The `rackup` uses port 9292 by default, but the `-p <port>` option can be
+`rackup`uses port 9292 by default, but the `-p <port>` option can be
 appended to change this.
