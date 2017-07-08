@@ -34,17 +34,8 @@ module TestHelpers
     #   response (Hash, if the endpoint works as expected)
     def send_email_with_curl_and_one_off_server(params)
       with_running_server do |base_url|
-        endpoint = "#{base_url}/email?#{params.to_query}"
-        curl_post_with_status_code(endpoint)
+        HttpClient.request :post, "#{base_url}/email", params: params
       end
-    end
-
-    # @param endpoint [String] should already have params appended if there are any
-    # @return Hash with keys:
-    #   status_code: Integer
-    #   response (Hash, if the endpoint works as expected)
-    def curl_post_with_status_code(endpoint)
-      HttpClient.request :post, endpoint
     end
 
   end
