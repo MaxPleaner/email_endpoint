@@ -1,4 +1,5 @@
-# See spec/helpers.rb for the definitions of the utility methods used here
+# See spec/test_helpers.rb for the definitions of the utility methods used here
+using TestHelpers
 
 RSpec.describe "API" do
 
