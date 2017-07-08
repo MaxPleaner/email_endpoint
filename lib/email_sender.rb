@@ -1,16 +1,23 @@
 require 'byebug'
 
-class EmailProcessor
+require_relative "./email_provider.rb"
+require_relative "./email_providers/sendgrid_api.rb"
+
+class EmailSender
+
+  # See lib/email_provider.rb for options
+  DefaultProviderName = :SendGridAPI
 
   # @param request [Sinatra::Request]
   # @return [Hash] with keys:
   #   status_code (Integer)
   #   response (Hash)
-  def self.run(request)
+  def self.run(request, provider_name=DefaultProviderName)
     filtered_params = filter_params(request.params.with_indifferent_access)
     errors = validate_params(filtered_params)
     status_code, response = if valid?(errors)
-      send_email(filtered_params).values_at :status_code, :response
+      email_result = send_email(filtered_params, provider_name)
+      email_result.values_at :status_code, :response
     else
       [422, errors]
     end
@@ -99,9 +106,8 @@ class EmailProcessor
     # @return [Hash] with keys:
     #   :status_code (Integer)
     #   :response (Hash)
-    def send_email(params)
-      { status_code: 200, response: {} }
-      # TODO
+    def send_email(params, provider_name)
+      EmailProvider.new(provider_name).send_email(params)
     end
 
   end

@@ -6,16 +6,22 @@ require 'dotenv'
 # Load environment variables from .env file
 Dotenv.load 
 
-require_relative './lib/email_processor.rb'
+require_relative './lib/email_sender.rb'
 require_relative './lib/http_client.rb'
 
 class Server < Sinatra::Base
 
   post '/email' do
-    result = EmailProcessor.run(request)
+    result = EmailSender.run(request)
     status result[:status_code]
     content_type "application/json"
     result[:response].to_json
+  rescue => e # Rescue most exceptions to prevent application
+              # details leaking
+    puts e.class, e, e.backtrace
+    status 500
+    content_type "application/json"
+    { errors: "Not sure what happened there." }.to_json
   end
 
 end

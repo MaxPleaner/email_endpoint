@@ -14,7 +14,7 @@ module TestHelpers
     def with_running_server(&blk)
       port = find_open_port
       thread = Thread.new { `rackup -p #{port} &> /dev/null` }
-      sleep 1 # TODO: remove this
+      sleep 2 # TODO: remove this
       blk.call("http://localhost:#{port}").tap { thread.kill }
     end
 
