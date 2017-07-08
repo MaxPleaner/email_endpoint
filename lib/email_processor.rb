@@ -7,7 +7,7 @@ class EmailProcessor
   #   status_code (Integer)
   #   response (Hash)
   def self.run(request)
-    filtered_params = filter_params(request.params)
+    filtered_params = filter_params(request.params.with_indifferent_access)
     errors = validate_params(filtered_params)
     status_code, response = if valid?(errors)
       send_email(filtered_params).values_at :status_code, :response
@@ -21,7 +21,7 @@ class EmailProcessor
   ParamValidations = {
     to: -> (val) {
       [
-        ("invalid email address" if valid_email?(val)),
+        ("invalid email address" if invalid_email?(val)),
         ("no value given" if val.blank?)
       ].compact
     },
@@ -32,7 +32,7 @@ class EmailProcessor
     },
     from: -> (val) {
       [
-        ("invalid email address" if valid_email?(val)),
+        ("invalid email address" if invalid_email?(val)),
         ("no value given" if val.blank?)
       ].compact
     },
@@ -58,10 +58,10 @@ class EmailProcessor
     private
 
     # @param email [String]
-    # @return [Boolean] indicating whether it passes the email regex
+    # @return [Boolean] indicating whether it fails the email regex
     #   the regex is taken from https://stackoverflow.com/a/22994329/2981429
-    def valid_email?(email)
-      !!(email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
+    def invalid_email?(email)
+      !(email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
     end
 
     # @param params [Hash]
