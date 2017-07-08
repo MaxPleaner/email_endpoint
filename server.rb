@@ -7,6 +7,7 @@ require 'dotenv'
 Dotenv.load 
 
 require_relative './lib/email_processor.rb'
+require_relative './lib/http_client.rb'
 
 class Server < Sinatra::Base
 

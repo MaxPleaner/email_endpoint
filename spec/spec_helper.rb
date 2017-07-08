@@ -1,6 +1,6 @@
-# Custom helper methods are found in helpers.rb
+# Custom helper methods are found in test_helpers.rb
 # RSpec config stuff is in this file, spec_helper.rb
-require_relative './helpers.rb'
+require_relative './test_helpers.rb'
 
 # require the main server class as well
 require_relative '../server.rb'
