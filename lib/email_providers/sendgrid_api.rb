@@ -29,7 +29,7 @@ class EmailProviders
       def format_params(params)
         {
           "personalizations" => [
-            {"to": ["email" => params[:to]]}
+            {"to" => ["email" => params[:to]]}
           ],
           "from" => { "email" => params[:from] },
           "subject" => params[:subject],
