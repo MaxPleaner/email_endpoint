@@ -8,7 +8,14 @@ require 'byebug' # debugger
 module TestHelpers
   refine Object do
 
-    # If ENV["SERVER_URL"] is set, the block is invoked, passed that url.
+    # @yield [SmtpServer] instance.
+    def with_smtp_server(&blk)
+      blk.call SmtpServer.new(*(%w{
+        TEST_EMAIL_USERNAME TEST_EMAIL_PASSWORD  
+      }.map &ENV.method(:fetch)))
+    end
+
+    # If ENV["SERVER_URL"] is set, the block is invoked and passed that url.
     # Otherwise, a temporary server in a background thread gets launched,
     # and its' url passed to the block before it's closed. 
     # @yield [base_url]
@@ -38,7 +45,7 @@ module TestHelpers
     # @return [Hash] with keys:
     #   status_code (Integer)
     #   response (Hash, if the endpoint works as expected)
-    def send_email_with_curl_and_one_off_server(params)
+    def send_email_with_local_server(params)
       with_running_server do |base_url|
         HttpClient.request_returning_parsed_json(
           :post,
