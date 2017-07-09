@@ -12,7 +12,7 @@ the best bet is to use version 2.3 or newer.
 This program also sends shell commands which assume that it's a Unix system
 and has the `curl` program installed.
 
-#### Usage
+#### Running Server
 
 **step 1**
 
@@ -27,6 +27,9 @@ cp .env.example .env
 
 _get api keys from mailgun and sendgrid, then add them to .env_
 
+_also, if running tests, create a new email account on Gmail and add
+the credentials here_
+
 **step 3**
 
 ```sh
@@ -35,6 +38,18 @@ bundle exec rackup
 
 `rackup`uses port 9292 by default, but the `-p <port>` option can be
 appended to change this.
+
+#### Usage
+
+The server has one route, POST /email, and accepts the params listed in the
+challenge prompt ("to", "to_name", "from", "from_name", "subject", "body").
+These must be given in the form body of the request as a JSON string
+
+The response returns a JSON-formatted hash, but it doesn't contain any data.
+The valuable information regarding the success/failure of the response is
+in the status code. 202 means success. 422 means there are parameter errors.
+Other response codes may be returned, depending on the response from the
+underlying service (SendGrid, Mailgun).
 
 #### running tests
 
@@ -144,6 +159,9 @@ but if there were many delegated methods, then it would be more terse to use `de
    - Note: this inability to set breakpoints turned out to be so annoying that
      I added an override. Now `env SERVER_URL=http://localhost:9292 rspec` can be
     used to test against the running local server.
+   - Also note: The tests do something similar with a local SMTP server.
+     Unless `env SMTP_ADDRESS` is set with the `rspec` call, one will be
+     fired up dynamically.
 
 5. Using a backport definition of Kernel#yield_self, which was added in Ruby 2.5
 
