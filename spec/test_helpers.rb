@@ -34,7 +34,11 @@ module TestHelpers
     #   response (Hash, if the endpoint works as expected)
     def send_email_with_curl_and_one_off_server(params)
       with_running_server do |base_url|
-        HttpClient.request :post, "#{base_url}/email", params: params
+        HttpClient.request_returning_parsed_json(
+          :post,
+          "#{base_url}/email",
+          params: params
+        )
       end
     end
 

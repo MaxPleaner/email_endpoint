@@ -15,8 +15,10 @@ class EmailProviders
     }
 
     # see {EmailProvider::Protocol#send_email}
+    # The response here is just an empty hash.
+    # The status code speaks for itself.
     def self.send_email(params)
-      HttpClient.request(
+      HttpClient.request_returning_status_code_only(
         :post,
         Endpoint,
         params: format_params(params),

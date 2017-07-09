@@ -11,6 +11,8 @@ class EmailProvider
     # @param params [Hash]
     # @raise [RuntimeError], but this method is expected to be redefined.
     #   it should return a Hash with status_code (Int) and response (Hash) keys
+    # The 'response' isn't really used here (it always returns an empty hash).
+    # Rather, the 'status_code' key is used to detect the result.
     def self.send_email(params); raise("not implemented"); end
   end
 
