@@ -5,6 +5,9 @@ require_relative './test_helpers.rb'
 # require the main server class as well
 require_relative '../server.rb'
 
+# A wrapper to read messages from a SMTP server
+require_relative './smtp_server.rb'
+
 RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
