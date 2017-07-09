@@ -35,7 +35,7 @@ class EmailProviders
           "subject" => params[:subject],
           "content" => [{
             "type" => "text/plain",
-            "value" => params[:plaintext]
+            "value" => params[:sanitized_html]
           }]
         }
       end

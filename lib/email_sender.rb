@@ -16,12 +16,20 @@ class EmailSender
     filtered_params = filter_params(request.params.with_indifferent_access)
     errors = validate_params(filtered_params)
     status_code, response = if valid?(errors)
+      filtered_params[:sanitized_html] = sanitize_html(filtered_params[:body])
       email_result = send_email(filtered_params, provider_name)
       email_result.values_at :status_code, :response
     else
       [422, errors]
     end
     { status_code: status_code, response: response }
+  end
+
+  # This is not called automatically by {.run}.
+  # @param body [String] which is HTML
+  # @return [String] which is email-safe
+  def self.sanitize_html(html)
+    html # TODO
   end
 
   # Per-column validation procs each return an array of error strings
@@ -96,11 +104,7 @@ class EmailSender
       errors.values.all? &:empty?
     end
 
-    # @param body [String] which is HTML
-    # @return [String] which is email-safe
-    def sanitize_html_for_email(body)
-      # TODO
-    end
+
 
     # @param params [Hash]
     # @return [Hash] with keys:
