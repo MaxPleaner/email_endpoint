@@ -14,6 +14,14 @@ defined?(yield_self) || (module Kernel; def yield_self; yield(self); end; end)
 
 class Server < Sinatra::Base
 
+  # Parse JSON request bodies
+  # Credit: https://stackoverflow.com/a/17049683/2981429
+  before do
+    request.body.rewind
+    payload = JSON.parse(request.body.read)
+    request.define_singleton_method(:payload, ->{payload})
+  end
+
   post '/email' do
     result = EmailSender.run(request)
     status result[:status_code]

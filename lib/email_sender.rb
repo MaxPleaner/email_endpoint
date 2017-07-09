@@ -8,12 +8,14 @@ class EmailSender
   # See lib/email_provider.rb for options
   DefaultProviderName = :SendGridAPI
 
+  # Depends on the #payload method being dynamically defined in a before_action
+  # (see server.rb)
   # @param request [Sinatra::Request]
   # @return [Hash] with keys:
   #   status_code (Integer)
   #   response (Hash)
   def self.run(request, provider_name=DefaultProviderName)
-    filtered_params = filter_params(request.params.with_indifferent_access)
+    filtered_params = filter_params(request.payload.with_indifferent_access)
     errors = validate_params(filtered_params)
     status_code, response = if valid?(errors)
       filtered_params[:sanitized_html] = sanitize_html(filtered_params[:body])
