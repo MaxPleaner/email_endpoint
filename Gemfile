@@ -19,6 +19,7 @@ gem 'json'
 gem 'dotenv'
 
 # Http Client
+gem 'rest-client'
 gem 'mechanize'
 
 # Pry is a more full-featured debugger but byebug is more dependable
