@@ -54,7 +54,7 @@ class HttpClient
     end
 
     def post_request(url, params, referrer, headers)
-      RestClient.post url, params.to_json, headers
+      RestClient.post url, params, headers
     rescue RestClient::MovedPermanently => e
       e.response.follow_redirection
     end

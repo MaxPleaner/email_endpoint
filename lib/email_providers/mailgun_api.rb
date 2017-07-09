@@ -7,7 +7,7 @@ class EmailProviders
 
     ApiKey = ENV.fetch("MAILGUN_API_KEY")
     DomainName = ENV.fetch("MAILGUN_DOMAIN_NAME")
-    Endpoint = "https://api:#{ApiKey}@api.mailgun.net/v3/#{DomainName}"
+    Endpoint = "https://api:#{ApiKey}@api.mailgun.net/v3/#{DomainName}/messages"
 
     # see {EmailProvider::Protocol#send_email}
     # The response here is just an empty hash.

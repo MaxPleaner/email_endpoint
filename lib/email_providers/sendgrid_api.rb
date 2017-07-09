@@ -21,7 +21,7 @@ class EmailProviders
       HttpClient.request_returning_status_code_only(
         :post,
         Endpoint,
-        params: format_params(params),
+        params: format_params(params).to_json,
         headers: Headers
       )
     end

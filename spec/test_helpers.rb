@@ -50,7 +50,7 @@ module TestHelpers
         HttpClient.request_returning_parsed_json(
           :post,
           "#{base_url}/email",
-          params: params
+          params: params.to_json
         )
       end
     end
