@@ -142,9 +142,12 @@ but if there were many delegated methods, then it would be more terse to use `de
    To workaround the cons, if I want to use breakpoints in the server,
    I make manual CURL requests
 
+5. Using a backport definition of Kernel#yield_self, which was added in Ruby 2.5
+
 #### issues encountered
 
 There is [this](https://github.com/sendgrid/docs/issues/1417) issue with
 SendGrid. They don't support the OPTION http request, which is automatically
 fired by browsers (and, it turns out, the Mechanize HTTP client I'm using).
-As a workaround I disabled the OPTIONS request
+
+As a workaround, I switched to RestClient for the POST request
