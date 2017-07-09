@@ -26,3 +26,6 @@ gem 'mechanize'
 # I like to be able to use either one.
 gem "byebug"
 gem "pry"
+
+# gem which can read mail from Gmail
+gem "gmail"
