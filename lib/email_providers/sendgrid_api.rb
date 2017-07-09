@@ -7,7 +7,7 @@ class EmailProviders
 
     ApiKey = ENV.fetch("SENDGRID_API_KEY")
 
-    Endpoint = ""
+    Endpoint = "http://api.sendgrid.com/v3/mail/send"
     
     Headers = {
       "Authorization" => "Bearer #{ApiKey}",
@@ -16,35 +16,30 @@ class EmailProviders
 
     # see {EmailProvider::Protocol#send_email}
     def self.send_email(params)
-      { status_code: 200, response: {} }
+      HttpClient.request(
+        :post,
+        Endpoint,
+        params: format_params(params),
+        headers: Headers
+      )
     end
 
     class << self
       private
-      def deliver_post_request(params)
-        HttpRequest(
-          :post,
-          Endpoint,
-          params: format_params(params),
-          headers: Headers
-        )
-      end
-      def self.format_params(params)
-        byebug
+      def format_params(params)
         {
           "personalizations" => [
-            {"to": ["email": params]}
-          ]
+            {"to": ["email" => params[:to]]}
+          ],
+          "from" => { "email" => params[:from] },
+          "subject" => params[:subject],
+          "content" => [{
+            "type" => "text/plain",
+            "value" => params[:plaintext]
+          }]
         }
       end
     end
-
-
-  # curl --request POST \
-  # --url https://api.sendgrid.com/v3/mail/send \
-  # --header "Authorization: Bearer $SENDGRID_API_KEY" \
-  # --header 'Content-Type: application/json' \
-  # --data '{"personalizations": [{"to": [{"email": "test@example.com"}]}],"from": {"email": "test@example.com"},"subject": "Sending with SendGrid is Fun","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}'
 
   end
 
