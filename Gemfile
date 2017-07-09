@@ -29,3 +29,6 @@ gem "pry"
 
 # gem which can read mail from Gmail
 gem "gmail"
+
+# used to convert HTML to plaintext
+gem "nokogiri"

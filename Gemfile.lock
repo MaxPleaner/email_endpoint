@@ -96,6 +96,7 @@ DEPENDENCIES
   gmail
   json
   mechanize
+  nokogiri
   pry
   rack
   rest-client

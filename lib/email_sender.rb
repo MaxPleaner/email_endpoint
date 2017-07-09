@@ -1,4 +1,4 @@
-require 'byebug'
+require 'nokogiri'
 
 # Require email provider factory
 require_relative "./email_provider.rb"
@@ -33,9 +33,9 @@ class EmailSender
 
   # This is not called automatically by {.run}.
   # @param body [String] which is HTML
-  # @return [String] which is email-safe
+  # @return [String] which is plaintext
   def self.sanitize_html(html)
-    html # TODO
+    Nokogiri::HTML(html).text
   end
 
   # Per-column validation procs each return an array of error strings
@@ -109,8 +109,6 @@ class EmailSender
     def valid?(errors)
       errors.values.all? &:empty?
     end
-
-
 
     # @param params [Hash]
     # @return [Hash] with keys:
