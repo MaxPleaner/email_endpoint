@@ -36,6 +36,9 @@ bundle exec rackup
 `rackup`uses port 9292 by default, but the `-p <port>` option can be
 appended to change this.
 
+#### running tests
+
+simply `rspec`, run from the root of the repo
 
 #### Design decisions
 
@@ -128,8 +131,20 @@ risk of them disrupting external libraries such as gems.
 allows other classes to add themselves as options for the EmailProvider
 factory.
 
-3. Using `define_singleton_method` to delegate in [lib/email_provider.rb](./lib/email_provider.rb)
-   Note that this is the same thing as `def send_email(params); provider.send_email(params); end`
-   but if there were many delegated methods, then it would be more terse to use `define_singleton_method`. 
+3. Using `define_singleton_method` to delegate in [lib/email_provider.rb](./lib/email_provider.rb).
+Note that this is the same thing as `def send_email(params); provider.send_email(params); end`
+but if there were many delegated methods, then it would be more terse to use `define_singleton_method`. 
 
-4. Making the test suite fire up dynamic, one-off servers in background threads
+4. Making the test suite fire up dynamic, one-off servers in background threads.
+   This has pros and cons.
+   - pros: no need to run a separate server in another terminal
+   - cons: debugger calls don't work in background threads
+   To workaround the cons, if I want to use breakpoints in the server,
+   I make manual CURL requests
+
+#### issues encountered
+
+There is [this](https://github.com/sendgrid/docs/issues/1417) issue with
+SendGrid. They don't support the OPTION http request, which is automatically
+fired by browsers (and, it turns out, the Mechanize HTTP client I'm using).
+As a workaround I disabled the OPTIONS request
