@@ -9,6 +9,9 @@ Dotenv.load
 require_relative './lib/email_sender.rb'
 require_relative './lib/http_client.rb'
 
+# Backport Kernel#yield_self which was added to Ruby 2.5 
+defined?(yield_self) || (module Kernel; def yield_self; yield(self); end; end)
+
 class Server < Sinatra::Base
 
   post '/email' do
