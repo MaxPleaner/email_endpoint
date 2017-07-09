@@ -141,6 +141,9 @@ but if there were many delegated methods, then it would be more terse to use `de
    - cons: debugger calls don't work in background threads
    To workaround the cons, if I want to use breakpoints in the server,
    I make manual CURL requests
+   - Note: this inability to set breakpoints turned out to be so annoying that
+     I added an override. Now `env SERVER_URL=http://localhost:9292 rspec` can be
+    used to test against the running local server.
 
 5. Using a backport definition of Kernel#yield_self, which was added in Ruby 2.5
 

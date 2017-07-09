@@ -8,14 +8,20 @@ require 'byebug' # debugger
 module TestHelpers
   refine Object do
 
-    # Runs a server in a background thread and closes it when the block is done
+    # If ENV["SERVER_URL"] is set, the block is invoked, passed that url.
+    # Otherwise, a temporary server in a background thread gets launched,
+    # and its' url passed to the block before it's closed. 
     # @yield [base_url]
     # @return the result of the yield
     def with_running_server(&blk)
-      port = find_open_port
-      thread = Thread.new { `rackup -p #{port} &> /dev/null` }
-      sleep 2 # TODO: remove this
-      blk.call("http://localhost:#{port}").tap { thread.kill }
+      if url = ENV["SERVER_URL"]
+        blk.call(url)
+      else
+        port = find_open_port
+        thread = Thread.new { `rackup -p #{port}` }
+        sleep 2 # TODO: remove this
+        blk.call("http://localhost:#{port}").tap { thread.kill }
+      end
     end
 
     private

@@ -7,12 +7,12 @@ RSpec.describe "API" do
 
     let(:valid_params) do
       {
-        to: "maxpleaner@gmail.com",
-        to_name: "Mr. Fake",
-        from: "noreply@mybrightwheel.com",
-        from_name: "Brightwheel",
-        subject: "A message from Brightwheel",
-        body: "<h1> Your bill</h1><p> $10</p>"
+        "to" => "maxpleaner@gmail.com",
+        "to_name" => "Mr. Fake",
+        "from" => "noreply@mybrightwheel.com",
+        "from_name" => "Brightwheel",
+        "subject" => "A message from Brightwheel",
+        "body" => "<h1> Your bill</h1><p> $10</p>"
       }
     end
 
@@ -30,13 +30,19 @@ RSpec.describe "API" do
 
       context "with valid params" do
         it "returns a JSON-encoded object" do
-          expect(response_to_query_with_valid_params[:response]).to be_a Hash
+          response_to_query_with_valid_params.tap do |response|
+            expect(response[:response]).to be_a Hash
+            expect(response[:status_code]).to eq 202
+          end
         end
       end
 
       context "with invalid params" do
         it "still returns a JSON-encoded object" do
-          expect(response_to_query_with_invalid_params[:response]).to be_a Hash
+          response_to_query_with_invalid_params.tap do |response|
+            expect(response[:response]).to be_a Hash
+            expect(response[:status_code]).to eq 422
+          end
         end
       end
 
@@ -46,7 +52,7 @@ RSpec.describe "API" do
 
       context "with valid params" do
         it "returns 200" do
-          expect(response_to_query_with_valid_params[:status_code]).to eq 200
+          expect(response_to_query_with_valid_params[:status_code]).to eq 202
         end
       end
 

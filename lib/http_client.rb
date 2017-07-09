@@ -41,9 +41,8 @@ class HttpClient
   # but parses the response body (the 'response' key in the returned hash)
   def self.request_returning_parsed_json(*args, **opts)
     request(*args, **opts).yield_self do |response|
-      byebug
       response.merge response: JSON.parse(response[:response])
-    end    
+    end
   end
 
   class << self
