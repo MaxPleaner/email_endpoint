@@ -1,12 +1,16 @@
 require 'byebug'
 
+# Require email provider factory
 require_relative "./email_provider.rb"
-require_relative "./email_providers/sendgrid_api.rb"
+
+# Require all individual provider APIs
+Dir.glob("./lib/email_providers/*.rb").each &method(:require)
 
 class EmailSender
 
   # See lib/email_provider.rb for options
-  DefaultProviderName = :SendGridAPI
+  # Can be overridden via ENV var
+  DefaultProviderName = ENV.fetch("EMAIL_PROVIDER", "SendGridAPI").to_sym
 
   # Depends on the #payload method being dynamically defined in a before_action
   # (see server.rb)

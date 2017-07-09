@@ -32,7 +32,7 @@ RSpec.describe "API" do
         it "returns a JSON-encoded object" do
           response_to_query_with_valid_params.tap do |response|
             expect(response[:response]).to be_a Hash
-            expect(response[:status_code]).to eq 202
+            expect([200, 202]).to include response[:status_code]
           end
         end
       end
@@ -64,12 +64,11 @@ RSpec.describe "API" do
       context "with valid params" do
         it "sends an email." do
           with_smtp_server do |server|
-            server.fetch_unread # clear the existing inbox
-            sleep 2.5 # give inbox time to empty
-            server.fetch_unread
+            sleep 2.5 # give inbox time to settle
+            server.fetch_unread # clear existing inbox
             expect(server.fetch_unread.length).to eq(0) # make sure it's empty
             result = response_to_query_with_valid_params
-            expect(result[:status_code]).to eq 202
+            expect([200, 202]).to include result[:status_code]
             sleep 2.5 # wait for email to arrive
             messages = server.fetch_unread
             expect(messages.length).to eq 1
@@ -87,7 +86,14 @@ RSpec.describe "API" do
 
       context "with invalid params" do
         it "does not send an email" do
-          response_to_query_with_invalid_params
+          with_smtp_server do |server|
+            sleep 2.5 # give inbox time to settle
+            server.fetch_unread # clear existing inbox
+            expect(server.fetch_unread.length).to eq(0) # make sure it's empty
+            response_to_query_with_invalid_params
+            sleep 2.5 # wait for email to arrive
+            expect(server.fetch_unread.length).to eq(0) # still empty
+          end
         end
       end      
 
@@ -96,8 +102,8 @@ RSpec.describe "API" do
     describe "status codes" do
 
       context "with valid params" do
-        it "returns 202" do
-          expect(response_to_query_with_valid_params[:status_code]).to eq 202
+        it "returns 200 or 202" do
+          expect([200, 202]).to include response_to_query_with_valid_params[:status_code]
         end
       end
 

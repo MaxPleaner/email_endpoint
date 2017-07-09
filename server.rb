@@ -27,8 +27,8 @@ class Server < Sinatra::Base
     status result[:status_code]
     content_type "application/json"
     result[:response].to_json
-  rescue => e # Rescue most exceptions to prevent application
-              # details leaking
+  rescue Exception => e # Rescue most exceptions to prevent application
+                        # details leaking
     puts e.class, e, e.backtrace
     status 500
     content_type "application/json"

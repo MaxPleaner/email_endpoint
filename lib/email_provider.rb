@@ -27,7 +27,7 @@ class EmailProvider
   # @param provider_name [Symbol] should be a key in the Providers hash
   # @return [EmailProvider] with #send_email delegated to the provider
   def initialize(provider_name)
-    @provider = self.class::Providers[provider_name]
+    @provider = self.class::Providers.fetch(provider_name)
     define_singleton_method :send_email, &provider.method(:send_email)
   end
 
