@@ -7,7 +7,7 @@ RSpec.describe "API" do
 
     let(:valid_params) do
       {
-        to: "fake@example.com",
+        to: "maxpleaner@gmail.com",
         to_name: "Mr. Fake",
         from: "noreply@mybrightwheel.com",
         from_name: "Brightwheel",
