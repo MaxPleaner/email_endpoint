@@ -8,11 +8,31 @@ require 'byebug' # debugger
 module TestHelpers
   refine Object do
 
+    # Format parameters in the way required by the mailgun API
+    # This mirrors EmailProviders::MailGunAPI.format_params
+    # @param [Hash]
+    # @return [Hash]
+    def format_mailgun_params(params)
+      {
+        from: params[:from],
+        to: params[:to],
+        subject: params[:subject],
+        text: params[:sanitized_html]
+      }
+    end
+
     # stubs the HttpClient.request's POST call
     # @param endpoint [String] a url
     # @param params [Hash]
     # @keyword response [Hash] should have status_code and response keys
     def stub_post(endpoint, params, response:)
+      allow(HttpClient).to(
+        receive(:request).with(
+          :post,
+          endpoint,
+          params: params
+        )
+      ).and_return(response)
     end
 
     # Valid parameters for POST /email
@@ -29,6 +49,7 @@ module TestHelpers
     end
 
     # valid_params with sanitized_html key set
+    # @return [Hash]
     def valid_params_with_sanitized_html
       valid_params.tap do |params|
         params.merge(
