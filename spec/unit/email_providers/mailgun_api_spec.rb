@@ -1,8 +1,9 @@
 using TestHelpers
 
-RSpec.describe "MailgunAPI" do
+RSpec.describe "MailGunAPI" do
 
   let(:mailgun_api) { EmailProviders::MailGunAPI }
+  let(:params) { valid_params_with_sanitized_html }
 
   describe "usage with EmailProvider::Protocol" do
     it "derives from EmailProvider::Protocol" do
@@ -16,16 +17,16 @@ RSpec.describe "MailgunAPI" do
 
   describe "constants" do
     it "defines some of them" do
-      expect(%i{
+      %i{
         ApiKey DomainName Endpoint
-      }.map(&mailgun_api.method(:const_get)).none?(&:blank?)).to be true
+      }.map(&mailgun_api.method(:const_get)).each &not_blank!
     end
   end
 
   context ".format_params" do
     it "formats the params" do
-      result = mailgun_api.send(:format_params, valid_params_with_sanitized_html)
-      expected = format_mailgun_params(valid_params_with_sanitized_html)
+      result = mailgun_api.send(:format_params, params)
+      expected = format_mailgun_params(params)
       expect(result).to include(expected)
     end
   end
@@ -35,10 +36,10 @@ RSpec.describe "MailgunAPI" do
       stubbed_response = { status_code: 202, response: {} }
       stub_post(
         mailgun_api::Endpoint,
-        format_mailgun_params({}),
-        response: stubbed_response
+        format_mailgun_params(params),
+        response: stubbed_response,
       )
-      expect(mailgun_api.send_email({})).to include(stubbed_response)
+      expect(mailgun_api.send_email(params)).to include(stubbed_response)
     end
 
   end

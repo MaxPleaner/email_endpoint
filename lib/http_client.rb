@@ -10,7 +10,7 @@ class HttpClient
 
   # @param type [Symbol] a HTTP request type. One of :get or :post.
   # @param url [String] should include query params in a GET request
-  # @keyword params [Hash] defaults to {}
+  # @keyword params [Hash, String] defaults to {}. Can be a JSON string
   # @keyword referrer [String], only used for :get
   # @keyword headers [Hash] defaults to {}
   # @return Hash with keys:

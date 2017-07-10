@@ -1,12 +1,18 @@
 require 'socket' # from Ruby Std-lib, provides TCPServer
 require 'byebug' # debugger
 
-
 # Global test helpers are provided via a refinement on Object
 # Load them with this placed somewhere other than a method:
 #    using TestHelpers
 module TestHelpers
   refine Object do
+
+    # @yield iteratee
+    # Usage: nil.tap(&not_blank?)
+    # the above example will raise an ExpectationNotMet error
+    def not_blank!
+      Proc.new { |x| expect(x.blank?).to be false }
+    end
 
     # Format parameters in the way required by the mailgun API
     # This mirrors EmailProviders::MailGunAPI.format_params
@@ -14,24 +20,41 @@ module TestHelpers
     # @return [Hash]
     def format_mailgun_params(params)
       {
-        from: params[:from],
-        to: params[:to],
-        subject: params[:subject],
-        text: params[:sanitized_html]
+        from: params[:from].tap(&not_blank!),
+        to: params[:to].tap(&not_blank!),
+        subject: params[:subject].tap(&not_blank!),
+        text: params[:sanitized_html].tap(&not_blank!)
       }
+    end
+
+    # Format parameters in the way required by Sendgrid's API
+    # This mirrors EmailProviders::SendGridAPI.format_params
+    # @param [Hash]
+    # @return [Hash]
+    def format_sendgrid_params(params)
+      {
+        "personalizations" => [
+          {"to" => ["email" => params[:to].tap(&not_blank!)]}
+        ],
+        "from" => { "email" => params[:from].tap(&not_blank!) },
+        "subject" => params[:subject].tap(&not_blank!),
+        "content" => [{
+          "type" => "text/plain",
+          "value" => params[:sanitized_html].tap(&not_blank!)
+        }]
+      }      
     end
 
     # stubs the HttpClient.request's POST call
     # @param endpoint [String] a url
     # @param params [Hash]
     # @keyword response [Hash] should have status_code and response keys
-    def stub_post(endpoint, params, response:)
+    def stub_post(endpoint, params, response:, headers: {})
+      opts = { params: params}.yield_self do |hash|
+        headers.blank? ? hash : hash.merge(headers: headers)
+      end
       allow(HttpClient).to(
-        receive(:request).with(
-          :post,
-          endpoint,
-          params: params
-        )
+        receive(:request).with(:post, endpoint, opts)
       ).and_return(response)
     end
 
@@ -51,7 +74,7 @@ module TestHelpers
     # valid_params with sanitized_html key set
     # @return [Hash]
     def valid_params_with_sanitized_html
-      valid_params.tap do |params|
+      valid_params.yield_self do |params|
         params.merge(
           sanitized_html: EmailSender.sanitize_html(params[:body])
         )
