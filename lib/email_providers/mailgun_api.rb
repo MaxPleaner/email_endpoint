@@ -23,6 +23,7 @@ class EmailProviders
     class << self
       private
       def format_params(params)
+        params = params.with_indifferent_access
         {
           from: params[:from],
           to: params[:to],

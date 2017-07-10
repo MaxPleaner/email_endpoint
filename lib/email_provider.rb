@@ -1,3 +1,4 @@
+
 class EmailProvider
 
   # A container which components get added to dynamically.
@@ -8,6 +9,7 @@ class EmailProvider
   # It isn't necessary for provider components to inherit from this protocol,
   # but it can be done so to ensure that all required methods are defined.
   class Protocol
+    
     # @param params [Hash]
     # @raise [RuntimeError], but this method is expected to be redefined.
     #   it should return a Hash with status_code (Int) and response (Hash) keys

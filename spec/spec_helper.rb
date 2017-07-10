@@ -1,12 +1,12 @@
-# Custom helper methods are found in test_helpers.rb
-# RSpec config stuff is in this file, spec_helper.rb
-require_relative './test_helpers.rb'
+
+# Load helpers & utility classes
+%w{
+  ./spec/helpers/*.rb
+  ./spec/utils/*.rb
+}.flat_map(&Dir.method(:glob)).map &method(:require)
 
 # require the main server class as well
 require_relative '../server.rb'
-
-# A wrapper to read messages from a SMTP server
-require_relative './smtp_server.rb'
 
 RSpec.configure do |config|
 

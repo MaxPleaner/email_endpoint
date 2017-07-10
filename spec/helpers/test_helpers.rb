@@ -8,6 +8,41 @@ require 'byebug' # debugger
 module TestHelpers
   refine Object do
 
+    # stubs the HttpClient.request's POST call
+    # @param endpoint [String] a url
+    # @param params [Hash]
+    # @keyword response [Hash] should have status_code and response keys
+    def stub_post(endpoint, params, response:)
+    end
+
+    # Valid parameters for POST /email
+    # @return [Hash]
+    def valid_params
+      {
+        "to" => "#{ENV.fetch("TEST_EMAIL_USERNAME")}@gmail.com",
+        "to_name" => "Mr. Fake",
+        "from" => "noreply@mybrightwheel.com",
+        "from_name" => "Brightwheel",
+        "subject" => "A message from Brightwheel",
+        "body" => "<h1> Your bill</h1><p> $10</p>"
+      }.with_indifferent_access
+    end
+
+    # valid_params with sanitized_html key set
+    def valid_params_with_sanitized_html
+      valid_params.tap do |params|
+        params.merge(
+          sanitized_html: EmailSender.sanitize_html(params[:body])
+        )
+      end
+    end
+
+    # Invalid parameters for POST /email
+    # @return [Hash]
+    def invalid_params
+      {}
+    end
+
     # @yield [SmtpServer] instance.
     def with_smtp_server(&blk)
       blk.call SmtpServer.new(*(%w{
@@ -26,7 +61,7 @@ module TestHelpers
       else
         port = find_open_port
         thread = Thread.new { `rackup -p #{port}` }
-        sleep 2 # TODO: remove this
+        sleep 2 # Give server time to launch
         blk.call("http://localhost:#{port}").tap { thread.kill }
       end
     end

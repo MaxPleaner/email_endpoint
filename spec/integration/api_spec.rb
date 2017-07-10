@@ -5,19 +5,6 @@ RSpec.describe "API" do
 
   context "POST /email" do
 
-    let(:valid_params) do
-      {
-        "to" => "#{ENV.fetch("TEST_EMAIL_USERNAME")}@gmail.com",
-        "to_name" => "Mr. Fake",
-        "from" => "noreply@mybrightwheel.com",
-        "from_name" => "Brightwheel",
-        "subject" => "A message from Brightwheel",
-        "body" => "<h1> Your bill</h1><p> $10</p>"
-      }
-    end
-
-    let(:invalid_params) { Hash.new }
-
     let(:response_to_query_with_valid_params) do
       send_email_with_local_server(valid_params)
     end
