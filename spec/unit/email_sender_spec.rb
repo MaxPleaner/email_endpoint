@@ -89,4 +89,37 @@ RSpec.describe "EmailSender" do
     end
   end
 
+  describe ".validate_params" do
+    it "runs all the procs in ParamValidations" do
+      EmailSender::ParamValidations.each do |name, proc|
+        expect(proc).to receive(:call).with(valid_params[name]).and_call_original
+      end
+      expect(EmailSender.send(
+        :validate_params,
+        valid_params
+      ).values.all?(&:empty?)).to be true
+    end
+    it "returns errors for invalid params" do
+      expect(EmailSender.send(
+        :validate_params,
+        invalid_params
+      ).values.all?(&:empty?)).to be false
+    end
+  end
+
+  describe ".valid?" do
+    it "indicates whether all the given errors are empty" do
+      expect(EmailSender.send(:valid?, { foo: [] })).to be true
+      expect(EmailSender.send(:valid?, { foo: ["bar"] })).to be false
+    end
+  end
+
+  describe ".send_email" do
+    it "instantiates the EmailProvider and calls its send_email method" do
+      params = {}
+      expect(EmailProviders::SendGridAPI).to receive(:send_email).with(params)
+      EmailSender.send(:send_email, params, :SendGridAPI)
+    end
+  end
+
 end

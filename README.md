@@ -146,10 +146,6 @@ risk of them disrupting external libraries such as gems.
 allows other classes to add themselves as options for the EmailProvider
 factory.
 
-3. Using `define_singleton_method` to delegate in [lib/email_provider.rb](./lib/email_provider.rb).
-Note that this is the same thing as `def send_email(params); provider.send_email(params); end`
-but if there were many delegated methods, then it would be more terse to use `define_singleton_method`. 
-
 4. Making the test suite fire up dynamic, one-off servers in background threads.
    This has pros and cons.
    - pros: no need to run a separate server in another terminal

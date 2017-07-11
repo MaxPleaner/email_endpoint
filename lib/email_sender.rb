@@ -80,6 +80,7 @@ class EmailSender
 
     # @param email [String]
     # @return [Boolean] indicating whether it fails the email regex
+    #   the regex is taken from https://stackoverflow.com/a/22994329/2981429
     def invalid_email?(email)
       !(email =~ /@/)
     end
@@ -114,7 +115,7 @@ class EmailSender
     #   :status_code (Integer)
     #   :response (Hash)
     def send_email(params, provider_name)
-      EmailProvider.new(provider_name).send_email(params)
+      EmailProvider.new(provider_name).provider.send_email(params)
     end
 
   end
