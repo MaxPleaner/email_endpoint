@@ -24,6 +24,7 @@ gem 'mechanize'
 
 # Pry is a more full-featured debugger but byebug is more dependable
 # I like to be able to use either one.
+# Both are only required by the test suite.
 gem "byebug"
 gem "pry"
 

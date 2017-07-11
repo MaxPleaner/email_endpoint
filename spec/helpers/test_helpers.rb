@@ -1,5 +1,4 @@
 require 'socket' # from Ruby Std-lib, provides TCPServer
-require 'byebug' # debugger
 
 # Global test helpers are provided via a refinement on Object
 # Load them with this placed somewhere other than a method:
