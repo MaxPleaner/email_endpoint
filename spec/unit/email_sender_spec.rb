@@ -25,9 +25,13 @@ RSpec.describe "EmailSender" do
       provider_name = EmailSender::DefaultProviderName
       expect(request).to receive(:payload).and_return(invalid_params)
       expect(EmailSender).not_to(receive(:send_email))
-      expect(EmailSender.run request, provider_name).to include(
+      result = EmailSender.run request, provider_name
+      expect(result).to include(
         status_code: 422
-      )      
+      )
+      valid_params.keys.each do |key|
+        expect(result[:response][key.to_sym]).to include("no value given")
+      end
     end
   end
 
