@@ -35,4 +35,43 @@ RSpec.describe "EmailSender" do
     end
   end
 
+  describe ".sanitize_html" do
+    it "removes html tags" do
+      expect(EmailSender.sanitize_html("<p>foo</p>")).to eq("foo")
+    end
+  end
+
+  describe "ParamValidations" do
+    let(:validation_keys) { %i{to to_name from from_name subject body} }
+    let(:validations) { EmailSender::ParamValidations }
+    it "includes the expected keys" do
+      expect(EmailSender::ParamValidations.keys).to include(*validation_keys)
+    end
+    it "returns an error message if any value is blank" do
+      expect(
+        validations.values_at(*validation_keys).map do |proc|
+          proc.call(nil)
+        end.all? { |errors| errors.include?("no value given") }
+      ).to be true
+    end
+    describe "to and from validations" do
+      it "returns an error message if an invalid email is given" do
+        invalid_email = "foo"
+        expect(
+          validations.values_at(:to, :from).map do |proc|
+            proc.call(invalid_email)
+          end.all? { |errors| errors.include?("invalid email address") }
+        ).to be true
+      end
+      it "returns no errors if a valid email is given" do
+        valid_email = "maxpleaner@gmail.com"
+        expect(
+          validations.values_at(*validation_keys).map do |proc|
+            proc.call(valid_email)
+          end.all? { |errors| errors.empty? }
+        ).to be true        
+      end
+    end
+  end
+
 end
