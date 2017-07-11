@@ -51,6 +51,17 @@ in the status code. 202 means success. 422 means there are parameter errors.
 Other response codes may be returned, depending on the response from the
 underlying service (SendGrid, Mailgun).
 
+By default, SendGrid is used by the server to send email.
+However, this can easily be changed to MailGun by launching the server with an
+environment variable:
+
+```rb
+env EMAIL_PROVIDER=MailGunAPI rackup
+```
+
+The other option, besides MailGunAPI, is SendGridAPI.
+
+
 #### running tests
 
 simply `rspec`, run from the root of the repo
