@@ -9,9 +9,6 @@ This is a Sinatra application.
 I am not sure what the minimum Ruby version is that can run this code, but
 the best bet is to use version 2.3 or newer.
 
-This program also sends shell commands which assume that it's a Unix system
-and has the `curl` program installed.
-
 #### Running Server
 
 **step 1**
@@ -56,7 +53,7 @@ However, this can easily be changed to MailGun by launching the server with an
 environment variable:
 
 ```rb
-env EMAIL_PROVIDER=MailGunAPI rackup
+env EMAIL_PROVIDER=MailGunAPI rackreadup
 ```
 
 The other option, besides MailGunAPI, is SendGridAPI.
@@ -161,8 +158,6 @@ factory.
    This has pros and cons.
    - pros: no need to run a separate server in another terminal
    - cons: debugger calls don't work in background threads
-   To workaround the cons, if I want to use breakpoints in the server,
-   I make manual CURL requests
    - Note: this inability to set breakpoints turned out to be so annoying that
      I added an override. Now `env SERVER_URL=http://localhost:9292 rspec` can be
     used to test against the running local server.
