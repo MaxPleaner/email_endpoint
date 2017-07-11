@@ -1,4 +1,4 @@
-### Brightwheel coding challenge
+### email_endpoint
 
 #### About
 
