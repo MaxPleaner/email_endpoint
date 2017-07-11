@@ -1,4 +1,3 @@
-
 class EmailProvider
 
   # A container which components get added to dynamically.
@@ -9,13 +8,21 @@ class EmailProvider
   # It isn't necessary for provider components to inherit from this protocol,
   # but it can be done so to ensure that all required methods are defined.
   class Protocol
+
+    # Error raised when something using this protocol doesn't implement
+    # a required method
+    class MethodNotImplementedError < NoMethodError
+    end
     
     # @param params [Hash]
     # @raise [RuntimeError], but this method is expected to be redefined.
     #   it should return a Hash with status_code (Int) and response (Hash) keys
     # The 'response' isn't really used here (it always returns an empty hash).
     # Rather, the 'status_code' key is used to detect the result.
-    def self.send_email(params); raise("not implemented"); end
+    def self.send_email(params)
+      raise(MethodNotImplementedError, "not implemented")
+    end
+
   end
 
   # @param class_or_module [Class] which implenents EmailProvider::Protocol
