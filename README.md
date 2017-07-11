@@ -165,6 +165,17 @@ but if there were many delegated methods, then it would be more terse to use `de
 
 5. Using a backport definition of Kernel#yield_self, which was added in Ruby 2.5
 
+6. The integration tests actually send the email using the email service,
+   and check whether it was delivered to a gmail address. There is some required
+   `sleep` when doing this which is fundamentally finnicky (it has to wait for
+   the email to arrive), which could possibly be removed if a post hook were
+   added to the email client.
+
+7. The unit tests do no network calls (all of that is stubbed), making them
+   run quicker. It's easy to run only the unit or integration tests
+   with `rspec spec/unit/` or `rspec spec/integration/`. Most of the methods
+   have unit tests, including the private ones.
+
 #### issues encountered
 
 There is [this](https://github.com/sendgrid/docs/issues/1417) issue with
