@@ -66,6 +66,20 @@ The other option, besides MailGunAPI, is SendGridAPI.
 
 simply `rspec`, run from the root of the repo
 
+The integration tests actually send the email using the email service,
+and check whether it was delivered to a gmail address. There is some required
+`sleep` when doing this which is fundamentally finnicky (it has to wait for
+the email to arrive), which could possibly be removed if a post hook were
+added to the email client.
+
+The unit tests do no network calls (all of that is stubbed), making them
+run quicker.
+
+It's easy to run only the unit or integration tests
+with `rspec spec/unit/` or `rspec spec/integration/`. Most of the methods
+have unit tests, including the private ones.
+
+
 #### Design decisions
 
 **minimal framework**
@@ -88,11 +102,7 @@ my functions' output before sending it as JSON. I don't need a model layer
 because I'm not doing any data persistence. In Sinatra, the controllers are
 inlined in the router, which can be inlined in the main server file.
 
-My actual server is around 30 lines of code. Everything else is separated into
-isolated components that can potentially be imported into other projects as
-needed.
-
-They are not bound to Sinatra in any way;
+Very little of the code here is bound to Sinatra in any way;
 rather they deal in POROs (plain old ruby objects).
 
 **functional programming**
@@ -143,7 +153,7 @@ Foo.a_private_class_method # NoMethodError: private method called ...
 **metaprogramming and tricks**
 
 I try not to do too much metaprogramming (e.g. I avoid `method_missing`)
-but have found that using these tools can make for more terse code.
+but these are some possibly tricky things I've done.
 
 Here's a couple examples of things found in this project:
 
@@ -164,22 +174,8 @@ factory.
    - Note: this inability to set breakpoints turned out to be so annoying that
      I added an override. Now `env SERVER_URL=http://localhost:9292 rspec` can be
     used to test against the running local server.
-   - Also note: The tests do something similar with a local SMTP server.
-     Unless `env SMTP_ADDRESS` is set with the `rspec` call, one will be
-     fired up dynamically.
 
 5. Using a backport definition of Kernel#yield_self, which was added in Ruby 2.5
-
-6. The integration tests actually send the email using the email service,
-   and check whether it was delivered to a gmail address. There is some required
-   `sleep` when doing this which is fundamentally finnicky (it has to wait for
-   the email to arrive), which could possibly be removed if a post hook were
-   added to the email client.
-
-7. The unit tests do no network calls (all of that is stubbed), making them
-   run quicker. It's easy to run only the unit or integration tests
-   with `rspec spec/unit/` or `rspec spec/integration/`. Most of the methods
-   have unit tests, including the private ones.
 
 #### issues encountered
 
