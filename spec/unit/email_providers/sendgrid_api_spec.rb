@@ -15,15 +15,13 @@ RSpec.describe "SendGridAPI" do
     end
   end
 
-  describe "constants" do
-    it "defines some of them" do
-      %i{
-        ApiKey Headers Endpoint
-      }.map(&sendgrid_api.method(:const_get)).each &not_blank!
-    end
+  it "defines some constants" do
+    %i{
+      ApiKey Headers Endpoint
+    }.map(&sendgrid_api.method(:const_get)).each &not_blank!
   end
 
-  context ".format_params" do
+  describe ".format_params" do
     it "formats the params" do
       result = sendgrid_api.send(:format_params, params)
       expected = format_sendgrid_params(params)
@@ -31,7 +29,7 @@ RSpec.describe "SendGridAPI" do
     end
   end
 
-  context ".send_email" do
+  describe ".send_email" do
     it "makes a request and returns status code" do
       stubbed_response = { status_code: 202, response: {} }
       stub_post(

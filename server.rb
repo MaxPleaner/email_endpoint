@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'active_support/all'
 require 'json'
 require 'dotenv'
+require 'ostruct'
 
 # Load environment variables from .env file
 Dotenv.load 
