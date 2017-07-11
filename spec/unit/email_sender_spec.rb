@@ -7,7 +7,7 @@ RSpec.describe "EmailSender" do
   end
 
   describe ".run" do
-    it "sends an email when given params" do
+    it "sends an email when given valid params" do
       request = double
       provider_name = EmailSender::DefaultProviderName
       expect(request).to receive(:payload).and_return(valid_params)
@@ -19,6 +19,15 @@ RSpec.describe "EmailSender" do
       expect(EmailSender.run request, provider_name).to include(
         status_code: 202, response: "foo"
       )
+    end
+    it "returns an error code when given invalid params" do
+      request = double
+      provider_name = EmailSender::DefaultProviderName
+      expect(request).to receive(:payload).and_return(invalid_params)
+      expect(EmailSender).not_to(receive(:send_email))
+      expect(EmailSender.run request, provider_name).to include(
+        status_code: 422
+      )      
     end
   end
 
