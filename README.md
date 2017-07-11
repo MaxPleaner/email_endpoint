@@ -42,11 +42,14 @@ The server has one route, POST /email, and accepts the params listed in the
 challenge prompt ("to", "to_name", "from", "from_name", "subject", "body").
 These must be given in the form body of the request as a JSON string
 
-The response returns a JSON-formatted hash, but it doesn't contain any data.
-The valuable information regarding the success/failure of the response is
-in the status code. 202 means success. 422 means there are parameter errors.
+The response returns a JSON-formatted hash.
+For succesfull responses, the status code will be either 200 or 202 and the
+response body will be an empty JSON-formatted hash.
+For validation errors, the status code is 422 and the response body
+will be a JSON-formatted hash mapping key to array(of error message strings).
 Other response codes may be returned, depending on the response from the
-underlying service (SendGrid, Mailgun).
+underlying service (SendGrid, Mailgun), but to avoid leaking application details,
+the response body is hidden.
 
 By default, SendGrid is used by the server to send email.
 However, this can easily be changed to MailGun by launching the server with an
