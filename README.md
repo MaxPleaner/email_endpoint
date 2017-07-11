@@ -88,9 +88,9 @@ Rails apps might sometimes be quicker to put together than Sinatra ones.
 However, I enjoy writing Sinatra apps more because I feel it gives my code
 a chance to shine.
 
-This may be a bit cheesy, but I like the fact that my code
-is not obscured behind predefined folders. The top level of my application
-has only two folders (lib/ and spec/), vs. the 10 in rails' boiler. 
+I like the fact that my code is not obscured behind predefined folders.
+The top level of my application has only two folders (lib/ and spec/)
+vs. the 10 in rails' boiler. 
 
 Since there's so little boilerplate, I'm confident that if someone else
 were to look at my code, they would be able to find the important bits.
@@ -124,9 +124,8 @@ pattern.
 
 I also use class methods for factories, but this is missing the point of
 instances, which is that they have their own state. I think there surely
-tons of use-cases for this, but from experience, I've seen when there is a lot
-of inferred method calls (i.e. patched attr_reader style methods) and internal
-state references things can get somewhat hard to understand. Also, it becomes
+tons of use-cases for this, but from experience, code can be harder to understand
+when there is a lot of internal state referenced by methods. Also, it becomes
 easier to move methods from one namespace to another (and also to test)
 when they can function without internal state tracking.
 
