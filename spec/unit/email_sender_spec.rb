@@ -74,4 +74,19 @@ RSpec.describe "EmailSender" do
     end
   end
 
+  describe ".invalid_email" do
+    it "applies a primitive regex" do
+      expect(EmailSender.send(:invalid_email?, "foo")).to be true
+      expect(EmailSender.send(:invalid_email?, "foo@")).to be false
+    end
+  end
+
+  describe ".filter_params" do
+    it "filters to only include keys in ParamValidations.keys" do
+      result = EmailSender.send(:filter_params, valid_params.merge(foo: "bar"))
+      expect(result.keys).not_to include(:foo)
+      expect(result.keys).to include *valid_params.keys.map(&:to_sym)
+    end
+  end
+
 end

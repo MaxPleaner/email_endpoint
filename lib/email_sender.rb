@@ -80,9 +80,8 @@ class EmailSender
 
     # @param email [String]
     # @return [Boolean] indicating whether it fails the email regex
-    #   the regex is taken from https://stackoverflow.com/a/22994329/2981429
     def invalid_email?(email)
-      !(email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
+      !(email =~ /@/)
     end
 
     # @param params [Hash]
